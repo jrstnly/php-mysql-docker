@@ -1,0 +1,62 @@
+version: "3.7"
+
+x-defaults:
+  network: &network
+    networks:
+      - net
+
+services:
+  php:
+    image: php-apache
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - "~/Development/data:/var/www/data:consistent"
+    configs:
+      - source: apache-vhosts
+        target: /etc/apache2/sites-available/000-default.conf
+      - source: php-ini
+        target: /usr/local/etc/php/conf.d/local.ini
+    <<: *network
+
+  db:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_pwd
+      - MYSQL_USER=dbuser
+      - MYSQL_PASSWORD=dbpass
+    volumes:
+      - "~/Docker/mysql/data:/var/lib/mysql"
+    configs:
+      - source: mysql-conf
+        target: /etc/mysql/my.cnf
+    secrets:
+      - db_pwd
+    <<: *network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    environment:
+      - UPLOAD_LIMIT=20M
+    ports:
+     - 8080:80
+    <<: *network
+
+
+networks:
+  net:
+
+secrets:
+  db_pwd:
+    file: ./mysql/root_password.txt
+
+configs:
+  apache-vhosts:
+    file: ./apache/vhosts.conf
+  php-ini:
+    file: ./php/local.ini
+  mysql-conf:
+    file: ./mysql/my.cnf
