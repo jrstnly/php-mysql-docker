@@ -29,7 +29,7 @@ services:
       - MYSQL_USER=dbuser
       - MYSQL_PASSWORD=dbpass
     volumes:
-      - "~/Docker/mysql/data:/var/lib/mysql"
+      - "~/Docker/mysql/data:/var/lib/mysql:consistent"
     configs:
       - source: mysql-conf
         target: /etc/mysql/my.cnf
