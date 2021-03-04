@@ -8,7 +8,7 @@ RUN apt-get install -y wget vim git zip unzip mariadb-client zlib1g-dev libzip-d
 # Install PHP extensions needed
 RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/
 RUN docker-php-ext-configure gd --with-jpeg
-RUN docker-php-ext-install -j$(nproc) mysqli pdo_mysql gd zip pcntl exif ldap sockets
+RUN docker-php-ext-install -j$(nproc) calendar mysqli pdo_mysql gd zip pcntl exif ldap sockets
 
 # Enable common Apache modules
 RUN a2enmod headers expires rewrite
